@@ -1,0 +1,120 @@
+{
+  "variables": {
+    "vmname": "debian-7.8.0-kfreebsd-amd64",
+    "headless": "false",
+    "iso_url": "http://buaya.klas.or.id/iso/debian/7.8.0/kfreebsd-amd64/iso-cd/debian-7.8.0-kfreebsd-amd64-netinst.iso",
+    "iso_checksum": "27f98b3ee419336485d31f6945a35377",
+    "ssh_username": "vagrant",
+    "iso_checksum_type": "md5",
+    "ssh_password": "vagrant",
+    "ssh_wait_timeout": "1h",
+    "disk_size": "40960",
+    "shutdown_command": "echo 'shutdown -P -h now' > shutdown.sh; echo 'vagrant'|sudo -S sh 'shutdown.sh'"
+  },
+  "builders": [
+      {
+        "type": "qemu",
+	"format": "qcow2",
+        "accelerator": "kvm",
+	"http_directory": ".",
+        "disk_size": "{{ user `disk_size`}}",
+        "headless": "{{ user `headless`}}",
+        "iso_checksum_type": "{{ user `iso_checksum_type` }}",
+        "iso_checksum": "{{ user `iso_checksum` }}",
+        "iso_url": "{{ user `iso_url` }}",
+        "shutdown_command": "{{user `shutdown_command`}}",
+        "ssh_password": "{{ user `ssh_password`}}",
+        "ssh_username": "{{ user `ssh_username`}}",
+        "ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
+        "vm_name": "{{ user `vmname`}}",
+        "boot_command": [
+            "e<wait>",
+            "<down><down><down><down><down><wait>",
+            "set kFreeBSD.preseed/url='http://ai.mahyudd.in/packer/debian-kfreebsd.cfg'<enter><wait>",
+            "set kFreeBSD.debian-installer=en_US <enter><wait>",
+            "set kFreeBSD.auto=true <enter><wait>",
+            "set kFreeBSD.locale=en_US <enter><wait>",
+            "set kFreeBSD.kbd-chooser/method=us <enter><wait>",
+            "set kFreeBSD.keyboard-configuration/xkb-keymap=us <enter><wait>",
+            "set kFreeBSD.netcfg/get_hostname={{ .Name }} <enter><wait>",
+            "set kFreeBSD.fb=false <enter><wait>",
+            "set kFreeBSD.debconf/frontend=noninteractive <enter><wait>",
+            "set kFreeBSD.console-setup/ask_detect=false <enter><wait>",
+            "set kFreeBSD.console-keymaps-at/keymap=us <enter><wait><f10>"
+      ]
+    },
+    {
+      "type": "virtualbox-iso",
+      "guest_os_type": "Debian_64",
+      "boot_wait": "4s",
+      "virtualbox_version_file": ".vbox_version",
+      "vboxmanage": [
+          [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "2048"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "4"
+        ]
+      ],
+      "disk_size": "{{ user `disk_size`}}",
+      "headless": "{{ user `headless`}}",
+      "http_directory": ".",
+      "iso_checksum_type": "{{ user `iso_checksum_type` }}",
+      "iso_checksum": "{{ user `iso_checksum` }}",
+      "iso_url": "{{ user `iso_url` }}",
+      "shutdown_command": "{{user `shutdown_command`}}",
+      "ssh_password": "{{ user `ssh_password`}}",
+      "ssh_username": "{{ user `ssh_username`}}",
+      "ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
+      "vm_name": "{{ user `vmname`}}",
+      "boot_command": [
+            "e<wait>",
+            "<down><down><down><down><down><wait>",
+            "set kFreeBSD.preseed/url='http://ai.mahyudd.in/packer/debian-kfreebsd.cfg'<enter><wait>",
+            "set kFreeBSD.debian-installer=en_US <enter><wait>",
+            "set kFreeBSD.auto=true <enter><wait>",
+            "set kFreeBSD.locale=en_US <enter><wait>",
+            "set kFreeBSD.kbd-chooser/method=us <enter><wait>",
+            "set kFreeBSD.keyboard-configuration/xkb-keymap=us <enter><wait>",
+            "set kFreeBSD.netcfg/get_hostname={{ .Name }} <enter><wait>",
+            "set kFreeBSD.fb=false <enter><wait>",
+            "set kFreeBSD.debconf/frontend=noninteractive <enter><wait>",
+            "set kFreeBSD.console-setup/ask_detect=false <enter><wait>",
+            "set kFreeBSD.console-keymaps-at/keymap=us <enter><wait><f10>"
+      ]
+    }
+  ],
+  "post-processors": [
+   {
+      "type": "vagrant",
+      "compression_level": 9,
+      "output": "build/{{isotime \"2006-01-02\"}}/{{.Provider}}-{{ user `vmname`}}.box"
+   }
+  ],
+  "provisioners": [
+    {
+      "override": {
+        "virtualbox-iso": {
+          "execute_command": "echo 'vagrant' | sudo -S sh '{{ .Path }}'"
+        }
+      },
+      "scripts": [
+        "scripts/root_setup.sh"
+      ],
+      "type": "shell"
+    },
+    {
+      "scripts": [
+        "scripts/setup.sh"
+      ],
+      "type": "shell"
+    }
+  ]
+}
+
