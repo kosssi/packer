@@ -1,0 +1,82 @@
+{
+  "variables": {
+    "headless": "true",
+    "iso_url": "http://buaya.klas.or.id/opensuse/distribution/13.2/iso/openSUSE-13.2-NET-x86_64.iso",
+    "iso_checksum": "f2f0ecc6b1939d3725f22221baed237f",
+    "ssh_username": "vagrant",
+    "iso_checksum_type": "md5",
+    "ssh_password": "vagrant",
+    "vmname" : "openSUSE-13.2-x86_64",
+    "ssh_wait_timeout": "1h",
+    "disk_size": "40960"
+  },
+  "builders": [
+    {
+        "type": "qemu",
+        "iso_url": "{{ user `iso_url` }}",
+        "iso_checksum": "{{ user `iso_checksum` }}",
+        "iso_checksum_type": "{{ user `iso_checksum_type` }}",
+        "ssh_password": "{{ user `ssh_password`}}",
+        "ssh_username": "{{ user `ssh_username`}}",
+        "ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
+        "disk_size": "{{ user `disk_size`}}",
+        "headless": "{{ user `headless`}}",
+        "format": "qcow2",
+        "accelerator": "kvm",
+        "vm_name": "{{ user `vmname`}}",
+        "http_directory": ".",
+	"boot_command": [
+        "<esc><enter><wait>",
+        "linux netsetup=dhcp install=cd:/<wait>",
+        " lang=en_US autoyast=http://ai.mahyudd.in/packer/openSUSE.xml<wait>",
+        " textmode=1<wait>",
+        "<enter><wait>"
+      ],
+        "shutdown_command": "echo 'vagrant' | sudo -S /sbin/halt -h -p"
+    },
+    {
+      "type": "virtualbox-iso",
+      "guest_os_type": "OpenSUSE_64",
+      "vm_name": "{{ user `vmname`}}",
+      "iso_checksum": "{{ user `iso_checksum` }}",
+      "iso_url": "{{ user `iso_url` }}",
+      "iso_checksum_type": "{{ user `iso_checksum_type` }}",
+      "ssh_password": "{{ user `ssh_password`}}",
+      "ssh_username": "{{ user `ssh_username`}}",
+      "ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
+      "disk_size": "{{ user `disk_size`}}",
+      "headless": "{{ user `headless`}}",
+      "vboxmanage": [
+        [ "modifyvm", "{{.Name}}", "--memory", "1024" ],
+        [ "modifyvm", "{{.Name}}", "--cpus",   "2"    ]
+      ],
+      "http_directory": ".",
+      "boot_command": [
+        "<esc><enter><wait>",
+        "linux netsetup=dhcp install=cd:/<wait>",
+        " lang=en_US autoyast=http://ai.mahyudd.in/packer/openSUSE.xml<wait>",
+        " textmode=1<wait>",
+        "<enter><wait>"
+      ],
+      "shutdown_command": "echo 'vagrant' | sudo -S /sbin/halt -h -p"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "scripts": [
+        "scripts/vagrant.sh",
+        "scripts/vmtools.sh",
+        "scripts/centos-cleanup.sh"
+      ],
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "vagrant",
+      "compression_level": 9,
+      "output": "build/{{isotime \"2006-01-02\"}}/{{.Provider}}-{{ user `vmname`}}.box"
+    }
+  ]
+}

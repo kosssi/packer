@@ -105,16 +105,11 @@
         }
       },
       "scripts": [
-        "scripts/root_setup.sh"
-      ],
-      "type": "shell"
-    },
-    {
-      "scripts": [
-        "scripts/setup.sh"
+        "scripts/root_setup.sh",
+        "scripts/setup.sh",
+	"scripts/vmtools.sh"
       ],
       "type": "shell"
     }
   ]
 }
-
