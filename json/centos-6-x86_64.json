@@ -58,9 +58,9 @@
     {
       "type": "shell",
       "scripts": [
-        "scripts/centos-vagrant.sh",
-        "scripts/centos-virtualbox.sh",
-        "scripts/centos-cleanup.sh"
+        "scripts/centos/initial.sh",
+        "scripts/common/vagrant.sh",
+        "scripts/centos/cleanup.sh"
       ],
       "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
     }
