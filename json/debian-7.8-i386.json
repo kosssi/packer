@@ -107,9 +107,9 @@
         }
       },
       "scripts": [
-        "scripts/root_setup.sh",
-        "scripts/setup.sh",
-	"scripts/vmtools.sh"
+        "scripts/debian/initial.sh",
+        "scripts/common/vagrant.sh",
+	"scripts/debian/cleanup.sh"
       ],
       "type": "shell"
     }

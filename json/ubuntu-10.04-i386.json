@@ -2,7 +2,7 @@
   "variables": {
     "vmname": "ubuntu-10.04.4-i386",
     "headless": "true",
-    "iso_url": "http://buaya.klas.or.id/iso/ubuntu/releases/precise/ubuntu-10.04.4-server-i386.iso",
+    "iso_url": "http://buaya.klas.or.id/iso/ubuntu/releases/10.04/ubuntu-10.04.4-server-i386.iso",
     "iso_checksum": "fc08a01e78348e3918180ea91a6883bb",
     "ssh_username": "vagrant",
     "iso_checksum_type": "md5",
@@ -115,9 +115,9 @@
         }
       },
       "scripts": [
-        "scripts/root_setup.sh",
-        "scripts/setup.sh",
-	"scripts/vmtools.sh"
+        "scripts/debian/initial.sh",
+        "scripts/common/vagrant.sh",
+	"scripts/debian/cleanup.sh"
       ],
       "type": "shell"
     }

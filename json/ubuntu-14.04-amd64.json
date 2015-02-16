@@ -2,7 +2,7 @@
   "variables": {
     "vmname": "ubuntu-14.04.1-amd64",
     "headless": "true",
-    "iso_url": "http://buaya.klas.or.id/iso/ubuntu/releases/trusty/ubuntu-14.04.1-server-amd64.iso",
+    "iso_url": "http://buaya.klas.or.id/iso/ubuntu/releases/14.04.1/ubuntu-14.04.1-server-amd64.iso",
     "iso_checksum": "ca2531b8cd79ea5b778ede3a524779b9",
     "ssh_username": "vagrant",
     "iso_checksum_type": "md5",
@@ -12,6 +12,33 @@
     "shutdown_command": "echo 'shutdown -P -h now' > shutdown.sh; echo 'vagrant'|sudo -S sh 'shutdown.sh'"
   },
   "builders": [
+    {
+        "type" : "virtualbox-ovf",
+        "source_path": "base-box/ubuntu-14.04.1-amd64.ova",
+        "headless": "{{user `headless`}}",
+        "ssh_password": "{{ user `ssh_password`}}",
+        "ssh_username": "{{ user `ssh_username`}}",
+        "shutdown_command": "{{user `shutdown_command`}}",
+        "ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
+        "shutdown_command": "{{user `shutdown_command`}}",
+        "virtualbox_version_file": ".vbox_version",
+         "vboxmanage": [
+          [
+          "modifyvm",
+          "{{.Name}}",
+          "--ostype",
+          "Ubuntu_64"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "4"
+        ]
+      ],
+        "guest_additions_path": "/tmp/VBoxGuestAdditions.iso"
+        
+    },
       {
         "type": "qemu",
 	"format": "qcow2",
@@ -93,9 +120,9 @@
         }
       },
       "scripts": [
-        "scripts/root_setup.sh",
-        "scripts/setup.sh",
-	"scripts/vmtools.sh"
+        "scripts/debian/initial.sh",
+        "scripts/common/vagrant.sh",
+	"scripts/debian/cleanup.sh"
       ],
       "type": "shell"
     }

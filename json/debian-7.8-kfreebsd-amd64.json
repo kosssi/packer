@@ -45,7 +45,7 @@
     },
     {
       "type": "virtualbox-iso",
-      "guest_os_type": "Debian_64",
+      "guest_os_type": "FreeBSD_64",
       "boot_wait": "4s",
       "virtualbox_version_file": ".vbox_version",
       "vboxmanage": [
@@ -105,9 +105,9 @@
         }
       },
       "scripts": [
-        "scripts/root_setup.sh",
-        "scripts/setup.sh",
-	"scripts/vmtools.sh"
+        "scripts/debian/initial.sh",
+        "scripts/common/vagrant.sh",
+	"scripts/debian/cleanup.sh"
       ],
       "type": "shell"
     }

@@ -1,8 +1,8 @@
 {
   "variables": {
     "vmname": "ubuntu-14.10-amd64",
-    "headless": "false",
-    "iso_url": "http://buaya.klas.or.id/iso/ubuntu/releases/utopic/ubuntu-14.10-server-amd64.iso",
+    "headless": "true",
+    "iso_url": "http://buaya.klas.or.id/iso/ubuntu/releases/14.10/ubuntu-14.10-server-amd64.iso",
     "iso_checksum": "91bd1cfba65417bfa04567e4f64b5c55",
     "ssh_username": "vagrant",
     "iso_checksum_type": "md5",
@@ -93,9 +93,9 @@
         }
       },
       "scripts": [
-        "scripts/root_setup.sh",
-        "scripts/setup.sh",
-	"scripts/vmtools.sh"
+        "scripts/debian/initial.sh",
+        "scripts/common/vagrant.sh",
+	"scripts/debian/cleanup.sh"
       ],
       "type": "shell"
     }
