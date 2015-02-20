@@ -8,9 +8,27 @@
     "ssh_password": "vagrant",
     "vmname" : "openSUSE-13.2-i586",
     "ssh_wait_timeout": "1h",
+    "shutdown_command": "echo 'vagrant' | sudo -S /sbin/halt -h -p",
     "disk_size": "40960"
   },
   "builders": [
+        {
+        "type" : "virtualbox-ovf",
+        "source_path": "/srv/nfs1/vagrant.klas.or.id/ova/virtualbox-ova-{{ user `vmname`}}.ova",
+        "headless": "{{user `headless`}}",
+        "ssh_password": "{{ user `ssh_password`}}",
+        "ssh_username": "{{ user `ssh_username`}}",
+        "shutdown_command": "{{user `shutdown_command`}}",
+        "ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
+        "guest_additions_mode": "disable",
+        "shutdown_command": "{{user `shutdown_command`}}",
+        "virtualbox_version_file": ".vbox_version",
+        "vboxmanage": [
+        [ "modifyvm", "{{.Name}}", "--memory", "1024" ],
+        [ "modifyvm", "{{.Name}}", "--cpus",   "2"    ]
+        ],
+        "guest_additions_path": "/srv/nfs1/vagrant.klas.or.id/iso/VBoxGuestAdditions_4.3.20.iso"
+    },
     {
         "type": "qemu",
         "iso_url": "{{ user `iso_url` }}",
@@ -28,7 +46,7 @@
 	"boot_command": [
         "<esc><enter><wait>",
         "linux netsetup=dhcp install=cd:/<wait>",
-        " lang=en_US autoyast=http://ai.mahyudd.in/packer/openSUSE.xml<wait>",
+        " lang=en_US autoyast=http://vagrant.klas.or.id/preseed/openSUSE.xml<wait>",
         " textmode=1<wait>",
         "<enter><wait>"
       ],
@@ -54,7 +72,7 @@
       "boot_command": [
         "<esc><enter><wait>",
         "linux netsetup=dhcp install=cd:/<wait>",
-        " lang=en_US autoyast=http://ai.mahyudd.in/packer/openSUSE.xml<wait>",
+        " lang=en_US autoyast=http://vagrant.klas.or.id/preseed/openSUSE.xml<wait>",
         " textmode=1<wait>",
         "<enter><wait>"
       ],
@@ -76,7 +94,7 @@
     {
       "type": "vagrant",
       "compression_level": 9,
-      "output": "build/{{isotime \"2006-01-02\"}}/{{.Provider}}-{{ user `vmname`}}.box"
+      "output" : "/srv/nfs1/vagrant.klas.or.id/box/{{isotime \"2006-01-02\"}}/{{.Provider}}-{{ user `vmname`}}.box"
     }
   ]
 }

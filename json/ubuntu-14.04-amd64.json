@@ -12,96 +12,116 @@
     "shutdown_command": "echo 'shutdown -P -h now' > shutdown.sh; echo 'vagrant'|sudo -S sh 'shutdown.sh'"
   },
   "builders": [
-    {
-        "type" : "virtualbox-ovf",
-        "source_path": "base-box/ubuntu-14.04.1-amd64.ova",
-        "headless": "{{user `headless`}}",
-        "ssh_password": "{{ user `ssh_password`}}",
-        "ssh_username": "{{ user `ssh_username`}}",
-        "shutdown_command": "{{user `shutdown_command`}}",
-        "ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
-        "shutdown_command": "{{user `shutdown_command`}}",
-        "virtualbox_version_file": ".vbox_version",
-         "vboxmanage": [
-          [
-          "modifyvm",
-          "{{.Name}}",
-          "--ostype",
-          "Ubuntu_64"
+        {
+  	"type" : "virtualbox-ovf",
+  	"source_path": "/srv/nfs1/vagrant.klas.or.id/ova/virtualbox-ova-{{ user `vmname`}}.ova",
+  	"headless": "{{user `headless`}}",
+  	"ssh_password": "{{ user `ssh_password`}}",
+  	"ssh_username": "{{ user `ssh_username`}}",
+  	"shutdown_command": "{{user `shutdown_command`}}",
+  	"ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
+  	"shutdown_command": "{{user `shutdown_command`}}",
+  	"guest_additions_mode": "disable",
+  	"virtualbox_version_file": ".vbox_version",
+  	"vboxmanage": [
+        [ "modifyvm", "{{.Name}}", "--memory", "1024" ],
+        [ "modifyvm", "{{.Name}}", "--cpus",   "2"    ]
         ],
-        [
-          "modifyvm",
-          "{{.Name}}",
-          "--cpus",
-          "4"
-        ]
-      ],
-        "guest_additions_path": "/tmp/VBoxGuestAdditions.iso"
-        
+  	"guest_additions_path": "/srv/nfs1/vagrant.klas.or.id/iso/VBoxGuestAdditions_4.3.20.iso"
     },
       {
-        "type": "qemu",
+  	"type": "qemu",
 	"format": "qcow2",
-        "accelerator": "kvm",
+  	"accelerator": "kvm",
 	"http_directory": ".",
-        "disk_size": "{{ user `disk_size`}}",
-        "headless": "{{ user `headless`}}",
-        "iso_checksum_type": "{{ user `iso_checksum_type` }}",
-        "iso_checksum": "{{ user `iso_checksum` }}",
-        "iso_url": "{{ user `iso_url` }}",
-        "shutdown_command": "{{user `shutdown_command`}}",
-        "ssh_password": "{{ user `ssh_password`}}",
-        "ssh_username": "{{ user `ssh_username`}}",
-        "ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
-        "vm_name": "{{ user `vmname`}}",
-      	"boot_command": [
-		"<esc><esc><enter><wait>",
-		"/install/vmlinuz noapic preseed/url=http://ai.mahyudd.in/packer/ubuntu.cfg <wait>",
-		"debian-installer=en_US auto locale=en_US kbd-chooser/method=us <wait>",
-		"hostname={{ .Name }} <wait>",
-		"fb=false debconf/frontend=noninteractive <wait>",
-		"keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA keyboard-configuration/variant=USA console-setup/ask_detect=false <wait>",
-		"initrd=/install/initrd.gz -- <enter><wait>"
+  	"disk_size": "{{ user `disk_size`}}",
+  	"headless": "{{ user `headless`}}",
+  	"iso_checksum_type": "{{ user `iso_checksum_type` }}",
+  	"iso_checksum": "{{ user `iso_checksum` }}",
+  	"iso_url": "{{ user `iso_url` }}",
+  	"shutdown_command": "{{user `shutdown_command`}}",
+  	"ssh_password": "{{ user `ssh_password`}}",
+  	"ssh_username": "{{ user `ssh_username`}}",
+  	"ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
+  	"vm_name": "{{ user `vmname`}}",
+	"boot_command": [
+			"<esc><wait>",
+			"<esc><wait>",
+			"<enter><wait>",
+			"/install/vmlinuz<wait>",
+			" auto<wait>",
+			" console-setup/ask_detect=false<wait>",
+			" console-setup/layoutcode=us<wait>",
+			" console-setup/modelcode=pc105<wait>",
+			" debconf/frontend=noninteractive<wait>",
+			" debian-installer=en_US<wait>",
+			" fb=false<wait>",
+			" initrd=/install/initrd.gz<wait>",
+			" kbd-chooser/method=us<wait>",
+			" keyboard-configuration/layout=USA<wait>",
+			" keyboard-configuration/variant=USA<wait>",
+			" locale=en_US<wait>",
+			" netcfg/get_domain=vm<wait>",
+			" netcfg/get_hostname=vagrant<wait>",
+			" noapic<wait>",
+			" preseed/url=http://vagrant.klas.or.id/preseed/ubuntu.cfg <wait>",
+			" -- <wait>",
+			"<enter><wait>"
       ]
     },
     {
-      "type": "virtualbox-iso",
-      "guest_os_type": "Ubuntu_64",
-      "boot_wait": "4s",
-      "virtualbox_version_file": ".vbox_version",
-      "vboxmanage": [
+	"type": "virtualbox-iso",
+	"guest_os_type": "Ubuntu_64",
+	"boot_wait": "4s",
+	"virtualbox_version_file": ".vbox_version",
+	"vboxmanage": [
           [
-          "modifyvm",
-          "{{.Name}}",
-          "--memory",
-          "2048"
+    	"modifyvm",
+    	"{{.Name}}",
+    	"--memory",
+    	"2048"
         ],
         [
-          "modifyvm",
-          "{{.Name}}",
-          "--cpus",
-          "4"
+    	"modifyvm",
+    	"{{.Name}}",
+    	"--cpus",
+    	"4"
         ]
       ],
-      "disk_size": "{{ user `disk_size`}}",
-      "headless": "{{ user `headless`}}",
-      "http_directory": ".",
-      "iso_checksum_type": "{{ user `iso_checksum_type` }}",
-      "iso_checksum": "{{ user `iso_checksum` }}",
-      "iso_url": "{{ user `iso_url` }}",
-      "shutdown_command": "{{user `shutdown_command`}}",
-      "ssh_password": "{{ user `ssh_password`}}",
-      "ssh_username": "{{ user `ssh_username`}}",
-      "ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
-      "vm_name": "{{ user `vmname`}}",
-      "boot_command": [
-        "<esc><esc><enter><wait>",
-        "/install/vmlinuz noapic preseed/url=http://ai.mahyudd.in/packer/ubuntu.cfg <wait>",
-        "debian-installer=en_US auto locale=en_US kbd-chooser/method=us <wait>",
-        "hostname={{ .Name }} <wait>",
-        "fb=false debconf/frontend=noninteractive <wait>",
-        "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA keyboard-configuration/variant=USA console-setup/ask_detect=false <wait>",
-        "initrd=/install/initrd.gz -- <enter><wait>"
+	"disk_size": "{{ user `disk_size`}}",
+	"headless": "{{ user `headless`}}",
+	"http_directory": ".",
+	"iso_checksum_type": "{{ user `iso_checksum_type` }}",
+	"iso_checksum": "{{ user `iso_checksum` }}",
+	"iso_url": "{{ user `iso_url` }}",
+	"shutdown_command": "{{user `shutdown_command`}}",
+	"ssh_password": "{{ user `ssh_password`}}",
+	"ssh_username": "{{ user `ssh_username`}}",
+	"ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
+	"vm_name": "{{ user `vmname`}}",
+	"boot_command": [
+		"<esc><wait>",
+		"<esc><wait>",
+		"<enter><wait>",
+		"/install/vmlinuz<wait>",
+		" auto<wait>",
+		" console-setup/ask_detect=false<wait>",
+		" console-setup/layoutcode=us<wait>",
+		" console-setup/modelcode=pc105<wait>",
+		" debconf/frontend=noninteractive<wait>",
+		" debian-installer=en_US<wait>",
+		" fb=false<wait>",
+		" initrd=/install/initrd.gz<wait>",
+		" kbd-chooser/method=us<wait>",
+		" keyboard-configuration/layout=USA<wait>",
+		" keyboard-configuration/variant=USA<wait>",
+		" locale=en_US<wait>",
+		" netcfg/get_domain=vm<wait>",
+		" netcfg/get_hostname=vagrant<wait>",
+		" noapic<wait>",
+		" preseed/url=http://vagrant.klas.or.id/preseed/ubuntu.cfg <wait>",
+		" -- <wait>",
+		"<enter><wait>"
       ]
     }
   ],
@@ -109,7 +129,7 @@
    {
       "type": "vagrant",
       "compression_level": 9,
-      "output": "build/{{isotime \"2006-01-02\"}}/{{.Provider}}-{{ user `vmname`}}.box"
+      "output" : "/srv/nfs1/vagrant.klas.or.id/box/{{isotime \"2006-01-02\"}}/{{.Provider}}-{{ user `vmname`}}.box"
    }
   ],
   "provisioners": [
@@ -120,12 +140,21 @@
         }
       },
       "scripts": [
-        "scripts/debian/initial.sh",
-        "scripts/common/vagrant.sh",
-	"scripts/debian/cleanup.sh"
+        "scripts/ubuntu/initial.sh",
+        "scripts/ubuntu/vagrant.sh",
+        "scripts/ubuntu/sudoers.sh",
+		"scripts/ubuntu/cleanup.sh"
       ],
-      "type": "shell"
+      "type": "shell",
+      "except": ["virtualbox-ovf"]
+    },
+    {
+      "scripts": [
+        "scripts/ubuntu/upgrade.sh",
+		"scripts/ubuntu/cleanup.sh"
+      ],
+      "type": "shell",
+      "only": [ "virtualbox-ovf"]
     }
   ]
 }
-

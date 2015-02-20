@@ -1,9 +1,9 @@
 {
   "variables": {
-    "vmname": "ubuntu-14.04.1-amd64",
-    "headless": "false",
-    "iso_url": "http://buaya.klas.or.id/ubuntu/dists/trusty/main/installer-amd64/current/images/netboot/mini.iso",
-    "iso_checksum": "7297321c2fa6424417a548c85edd6e98",
+    "vmname": "ubuntu-15.04-i386",
+    "headless": "true",
+    "iso_url": "http://buaya.klas.or.id/ubuntu/dists/vivid/main/installer-i386/current/images/netboot/mini.iso",
+    "iso_checksum": "b5a7169177c934a18e0354b18a0ee97b",
     "ssh_username": "vagrant",
     "iso_checksum_type": "md5",
     "ssh_password": "vagrant",
@@ -12,6 +12,23 @@
     "shutdown_command": "echo 'shutdown -P -h now' > shutdown.sh; echo 'vagrant'|sudo -S sh 'shutdown.sh'"
   },
   "builders": [
+        {
+        "type" : "virtualbox-ovf",
+        "source_path": "/srv/nfs1/vagrant.klas.or.id/ova/virtualbox-ova-{{ user `vmname`}}.ova",
+        "headless": "{{user `headless`}}",
+        "ssh_password": "{{ user `ssh_password`}}",
+        "ssh_username": "{{ user `ssh_username`}}",
+        "shutdown_command": "{{user `shutdown_command`}}",
+        "ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
+        "shutdown_command": "{{user `shutdown_command`}}",
+        "guest_additions_mode": "disable",
+        "virtualbox_version_file": ".vbox_version",
+        "vboxmanage": [
+        [ "modifyvm", "{{.Name}}", "--memory", "1024" ],
+        [ "modifyvm", "{{.Name}}", "--cpus",   "2"    ]
+        ],
+        "guest_additions_path": "/srv/nfs1/vagrant.klas.or.id/iso/VBoxGuestAdditions_4.3.20.iso"
+    },
       {
         "type": "qemu",
 	"format": "qcow2",
@@ -27,14 +44,14 @@
         "ssh_username": "{{ user `ssh_username`}}",
         "ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
         "vm_name": "{{ user `vmname`}}",
-      	"boot_command": [
-		"<esc><wait>",
-		"/install/vmlinuz noapic preseed/url=http://ai.mahyudd.in/packer/ubuntu.cfg <wait>",
-		"debian-installer=en_US auto locale=en_US kbd-chooser/method=us <wait>",
-		"hostname={{ .Name }} <wait>",
-		"fb=false debconf/frontend=noninteractive <wait>",
-		"keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA keyboard-configuration/variant=USA console-setup/ask_detect=false <wait>",
-		"initrd=/install/initrd.gz -- <enter><wait>"
+      "boot_command": [
+        "<esc><wait><wait>",
+        "/linux noapic preseed/url=http://vagrant.klas.or.id/preseed/ubuntu.cfg <wait>",
+        "debian-installer=en_US auto locale=en_US kbd-chooser/method=us <wait>",
+        "hostname={{ .Name }} <wait>",
+        "fb=false debconf/frontend=noninteractive <wait>",
+        "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA keyboard-configuration/variant=USA console-setup/ask_detect=false <wait>",
+        "initrd=/initrd.gz -- <enter><wait>"
       ]
     },
     {
@@ -68,8 +85,8 @@
       "ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
       "vm_name": "{{ user `vmname`}}",
       "boot_command": [
-        "<esc><wait>",
-        "/linux noapic preseed/url=http://ai.mahyudd.in/packer/ubuntu.cfg <wait>",
+        "<esc><wait><wait>",
+        "/linux noapic preseed/url=http://vagrant.klas.or.id/preseed/ubuntu.cfg <wait>",
         "debian-installer=en_US auto locale=en_US kbd-chooser/method=us <wait>",
         "hostname={{ .Name }} <wait>",
         "fb=false debconf/frontend=noninteractive <wait>",
@@ -82,7 +99,7 @@
    {
       "type": "vagrant",
       "compression_level": 9,
-      "output": "build/{{isotime \"2006-01-02\"}}/{{.Provider}}-{{ user `vmname`}}.box"
+      "output" : "/srv/nfs1/vagrant.klas.or.id/box/{{isotime \"2006-01-02\"}}/{{.Provider}}-{{ user `vmname`}}.box"
    }
   ],
   "provisioners": [

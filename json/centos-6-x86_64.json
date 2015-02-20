@@ -1,4 +1,5 @@
 {
+
   "variables": {
     "headless": "true",
     "iso_url": "http://buaya.klas.or.id/centos/6/isos/x86_64/CentOS-6.6-x86_64-netinstall.iso",
@@ -8,9 +9,27 @@
     "ssh_password": "vagrant",
     "ssh_wait_timeout": "1h",
     "vmname" : "centos-6-x86_64",
+    "shutdown_command": "echo 'vagrant' | sudo -S /sbin/halt -h -p",
     "disk_size": "40960"
   },
   "builders": [
+        {
+        "type" : "virtualbox-ovf",
+        "source_path": "/srv/nfs1/vagrant.klas.or.id/ova/virtualbox-ova-{{ user `vmname`}}.ova",
+        "headless": "{{user `headless`}}",
+        "ssh_password": "{{ user `ssh_password`}}",
+        "ssh_username": "{{ user `ssh_username`}}",
+        "shutdown_command": "{{user `shutdown_command`}}",
+        "ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
+        "guest_additions_mode": "disable",
+        "shutdown_command": "{{user `shutdown_command`}}",
+        "virtualbox_version_file": ".vbox_version",
+        "vboxmanage": [
+        [ "modifyvm", "{{.Name}}", "--memory", "1024" ],
+        [ "modifyvm", "{{.Name}}", "--cpus",   "2"    ]
+        ],
+        "guest_additions_path": "/srv/nfs1/vagrant.klas.or.id/iso/VBoxGuestAdditions_4.3.20.iso"
+    },
     {
         "type": "qemu",
         "iso_url": "{{ user `iso_url` }}",
@@ -21,13 +40,11 @@
         "ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
         "disk_size": "{{ user `disk_size`}}",
         "headless": "{{ user `headless`}}",
-                "ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
         "format": "qcow2",
         "accelerator": "kvm",
-        "vm_name": "{{ user `vmname`}}",
         "http_directory": ".",
         "boot_command": [
-            "<tab> text ks=http://ai.mahyudd.in/packer/{{user `vmname`}}.cfg<enter>"
+            "<tab> text ks=http://vagrant.klas.or.id/preseed/{{user `vmname`}}.cfg<enter>"
         ],
         "shutdown_command": "echo 'vagrant' | sudo -S /sbin/halt -h -p"
     },
@@ -36,8 +53,8 @@
       "guest_os_type": "RedHat_64",
       "vm_name": "{{ user `vmname`}}",
       "iso_checksum": "{{ user `iso_checksum` }}",
+      "iso_checksum_type": "{{ user `iso_checksum_type` }}",
       "iso_url": "{{ user `iso_url` }}",
-        "iso_checksum_type": "{{ user `iso_checksum_type` }}",
       "ssh_password": "{{ user `ssh_password`}}",
       "ssh_username": "{{ user `ssh_username`}}",
       "ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
@@ -49,12 +66,19 @@
       ],
       "http_directory": ".",
       "boot_command": [
-        "<tab> text ks=http://ai.mahyudd.in/packer/{{user `vmname`}}.cfg<enter>"
+            "<tab> text ks=http://vagrant.klas.or.id/preseed/{{user `vmname`}}.cfg<enter>"
       ],
       "shutdown_command": "echo 'vagrant' | sudo -S /sbin/halt -h -p"
     }
   ],
-  "provisioners": [
+  "post-processors": [
+    {
+      "type": "vagrant",
+      "compression_level": 9,
+      "output" : "/srv/nfs1/vagrant.klas.or.id/box/{{isotime \"2006-01-02\"}}/{{.Provider}}-{{ user `vmname`}}.box"
+    }
+  ],
+    "provisioners": [
     {
       "type": "shell",
       "scripts": [
@@ -63,13 +87,6 @@
         "scripts/centos/cleanup.sh"
       ],
       "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
-    }
-  ],
-  "post-processors": [
-    {
-      "type": "vagrant",
-      "compression_level": 9,
-      "output": "build/{{isotime \"2006-01-02\"}}/{{.Provider}}-{{ user `vmname`}}.box"
     }
   ]
 }

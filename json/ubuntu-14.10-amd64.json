@@ -12,6 +12,23 @@
     "shutdown_command": "echo 'shutdown -P -h now' > shutdown.sh; echo 'vagrant'|sudo -S sh 'shutdown.sh'"
   },
   "builders": [
+        {
+        "type" : "virtualbox-ovf",
+        "source_path": "/srv/nfs1/vagrant.klas.or.id/ova/virtualbox-ova-{{ user `vmname`}}.ova",
+        "headless": "{{user `headless`}}",
+        "ssh_password": "{{ user `ssh_password`}}",
+        "ssh_username": "{{ user `ssh_username`}}",
+        "shutdown_command": "{{user `shutdown_command`}}",
+        "ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
+        "shutdown_command": "{{user `shutdown_command`}}",
+        "guest_additions_mode": "disable",
+        "virtualbox_version_file": ".vbox_version",
+        "vboxmanage": [
+        [ "modifyvm", "{{.Name}}", "--memory", "1024" ],
+        [ "modifyvm", "{{.Name}}", "--cpus",   "2"    ]
+        ],
+        "guest_additions_path": "/srv/nfs1/vagrant.klas.or.id/iso/VBoxGuestAdditions_4.3.20.iso"
+    },
       {
         "type": "qemu",
 	"format": "qcow2",
@@ -29,7 +46,7 @@
         "vm_name": "{{ user `vmname`}}",
       	"boot_command": [
 		"<esc><esc><enter><wait>",
-		"/install/vmlinuz noapic preseed/url=http://ai.mahyudd.in/packer/ubuntu.cfg <wait>",
+		"/install/vmlinuz noapic preseed/url=http://vagrant.klas.or.id/preseed/ubuntu.cfg <wait>",
 		"debian-installer=en_US auto locale=en_US kbd-chooser/method=us <wait>",
 		"hostname={{ .Name }} <wait>",
 		"fb=false debconf/frontend=noninteractive <wait>",
@@ -69,7 +86,7 @@
       "vm_name": "{{ user `vmname`}}",
       "boot_command": [
 		"<esc><esc><enter><wait>",
-		"/install/vmlinuz noapic preseed/url=http://ai.mahyudd.in/packer/ubuntu.cfg <wait>",
+		"/install/vmlinuz noapic preseed/url=http://vagrant.klas.or.id/preseed/ubuntu.cfg <wait>",
 		"debian-installer=en_US auto locale=en_US kbd-chooser/method=us <wait>",
 		"hostname={{ .Name }} <wait>",
 		"fb=false debconf/frontend=noninteractive <wait>",
@@ -82,7 +99,7 @@
    {
       "type": "vagrant",
       "compression_level": 9,
-      "output": "build/{{isotime \"2006-01-02\"}}/{{.Provider}}-{{ user `vmname`}}.box"
+      "output" : "/srv/nfs1/vagrant.klas.or.id/box/{{isotime \"2006-01-02\"}}/{{.Provider}}-{{ user `vmname`}}.box"
    }
   ],
   "provisioners": [

@@ -4,7 +4,7 @@
 groupadd vagrant
 useradd vagrant
 
-zypper install --non-interactive virtualbox-guest-tools 
+zypper install --non-interactive virtualbox-guest-tools virtualbox-guest-kmp-pae
 echo -e "vagrant ALL=(ALL) NOPASSWD: ALL\n" >> /etc/sudoers.d/vagrant
 # Zypper lock
 zypper --non-interactive rl \*
@@ -15,6 +15,7 @@ zypper ar http://download.opensuse.org/update/13.2/ openSUSE-13.2-Update
 zypper ar http://download.opensuse.org/update/13.2-non-oss/ openSUSE-13.2-Update-Non-Oss
 zypper refresh
 
-zypper --non-interactive in tar automake gcc kernel-source kernel-devel
-cd /usr/src/linux
-make olddefconfig && make prepare && make scripts
+#zypper --non-interactive in tar automake gcc kernel-source kernel-devel
+#cd /usr/src/linux
+#make olddefconfig && make prepare && make scripts
+zypper --non-interactive in -f virtualbox-guest-kmp-default virtualbox-guest-tools
