@@ -1,17 +1,18 @@
 {
   "variables": {
-    "vmname": "ubuntu-14.04.1-amd64",
-    "headless": "true",
-    "iso_url": "http://buaya.klas.or.id/iso/ubuntu/releases/14.04.1/ubuntu-14.04.1-server-amd64.iso",
-    "iso_checksum": "ca2531b8cd79ea5b778ede3a524779b9",
-    "ssh_username": "vagrant",
-    "iso_checksum_type": "md5",
-    "ssh_password": "vagrant",
-    "ssh_wait_timeout": "1h",
     "disk_size": "40960",
-    "distro" : "ubuntu",
-    "shutdown_command": "echo 'shutdown -P -h now' > shutdown.sh; echo 'vagrant'|sudo -S sh 'shutdown.sh'"
+    "distro" : "lubuntu",
+    "headless": "false",
+    "iso_checksum": "a0de9f1db725ea7c9961e3b74c9bb0e6",
+    "iso_checksum_type": "md5",
+    "iso_url": "http://buaya.klas.or.id/iso/ubuntu/cdimage/lubuntu/vivid/alpha-2/vivid-alternate-amd64.iso",
+    "shutdown_command": "echo 'shutdown -P -h now' > shutdown.sh; echo 'vagrant'|sudo -S sh 'shutdown.sh'",
+    "ssh_password": "vagrant",
+    "ssh_username": "vagrant",
+    "ssh_wait_timeout": "1h",
+    "vmname": "lubuntu-15.04-amd64"
   },
+
   "builders": [
         {
   	"type" : "virtualbox-ovf",

@@ -9,3 +9,4 @@ rm -rf /var/db/freebsd-update/install.*
 rm -rf /boot/kernel.old
 rm -rf /usr/src/*
 rm -f /*.core
+rm -f /home/vagrant/VBoxGuestAdditions*

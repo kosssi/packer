@@ -3,7 +3,7 @@
 freebsd_major=`uname -r | awk -F. '{ print $1 }'`
 
 #Set the time correctly
-ntpdate -v -b in.pool.ntp.org
+ntpdate -v -b id.pool.ntp.org
 
 date > /etc/vagrant_box_build_time
 
@@ -26,6 +26,7 @@ pkg update
 pkg install -y sudo
 pkg install -y curl
 pkg install -y ca_root_nss
+pkg install -y bash
 
 # Emulate the ETCSYMLINK behavior of ca_root_nss; this is for FreeBSD 10, where fetch(1) was
 # massively refactored and doesn't come with SSL CAcerts anymore
@@ -39,12 +40,16 @@ fetch -am -o authorized_keys 'https://raw.github.com/mitchellh/vagrant/master/ke
 chown -R vagrant /home/vagrant/.ssh
 chmod -R go-rwsx /home/vagrant/.ssh
 
+#change shell vagrant to bash
+chsh -s /usr/local/bin/bash vagrant
+
 # As sharedfolders are not in defaults ports tree
 # We will use vagrant via NFS
 # Enable NFS
 echo 'rpcbind_enable="YES"' >> /etc/rc.conf
 echo 'nfs_server_enable="YES"' >> /etc/rc.conf
 echo 'mountd_flags="-r"' >> /etc/rc.conf
+
 
 # Enable passwordless sudo
 echo "vagrant ALL=(ALL) NOPASSWD: ALL" >> /usr/local/etc/sudoers
@@ -56,4 +61,6 @@ EOT
 
 pw groupadd vboxusers
 pw groupmod vboxusers -m vagrant
+
+
 

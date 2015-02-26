@@ -20,8 +20,8 @@
         "ssh_username": "{{ user `ssh_username`}}",
         "shutdown_command": "{{user `shutdown_command`}}",
         "ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
-        "shutdown_command": "{{user `shutdown_command`}}",
         "guest_additions_mode": "disable",
+        "shutdown_command": "{{user `shutdown_command`}}",
         "virtualbox_version_file": ".vbox_version",
         "vboxmanage": [
         [ "modifyvm", "{{.Name}}", "--memory", "1024" ],
@@ -31,9 +31,9 @@
     },
       {
         "type": "qemu",
-	"format": "qcow2",
+		"format": "qcow2",
         "accelerator": "kvm",
-	"http_directory": ".",
+		"http_directory": ".",
         "disk_size": "{{ user `disk_size`}}",
         "headless": "{{ user `headless`}}",
         "iso_checksum_type": "{{ user `iso_checksum_type` }}",
@@ -47,7 +47,7 @@
         "boot_command": [
             "<esc><wait>",
             "install <wait>",
-            "preseed/url=http://vagrant.klas.or.id/preseed//debian.cfg <wait>",
+            "preseed/url=http://vagrant.klas.or.id/preseed/debian.cfg <wait>",
             "debian-installer=en_US <wait>",
             "auto <wait>",
             "locale=en_US <wait>",
@@ -94,7 +94,7 @@
       "boot_command": [
             "<esc><wait>",
             "install <wait>",
-            "preseed/url=http://vagrant.klas.or.id/preseed//debian.cfg <wait>",
+            "preseed/url=http://vagrant.klas.or.id/preseed/debian.cfg <wait>",
             "debian-installer=en_US <wait>",
             "auto <wait>",
             "locale=en_US <wait>",
@@ -125,10 +125,22 @@
       },
       "scripts": [
         "scripts/debian/initial.sh",
-        "scripts/common/vagrant.sh",
-	"scripts/debian/cleanup.sh"
+        "scripts/debian/vagrant.sh",
+        "scripts/debian/sudoers.sh",
+		"scripts/debian/cleanup.sh",
+		"scripts/common/minimize.sh"
       ],
-      "type": "shell"
+      "type": "shell",
+      "except": ["virtualbox-ovf"]
+    },
+    {
+      "scripts": [
+        "scripts/debian/upgrade.sh",
+		"scripts/debian/cleanup.sh",
+		"scripts/common/minimize.sh"
+      ],
+      "type": "shell",
+      "only": [ "virtualbox-ovf"]
     }
   ]
 }

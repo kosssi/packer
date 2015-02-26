@@ -1,16 +1,4 @@
 {
-  "variables": {
-    "vmname": "debian-7.8.0-amd64",
-    "headless": "true",
-    "iso_url": "http://buaya.klas.or.id/iso/debian/7.8.0/amd64/iso-cd/debian-7.8.0-amd64-netinst.iso",
-    "iso_checksum": "a91fba5001cf0fbccb44a7ae38c63b6e",
-    "ssh_username": "vagrant",
-    "iso_checksum_type": "md5",
-    "ssh_password": "vagrant",
-    "ssh_wait_timeout": "1h",
-    "disk_size": "40960",
-    "shutdown_command": "echo 'shutdown -P -h now' > shutdown.sh; echo 'vagrant'|sudo -S sh 'shutdown.sh'"
-  },
   "builders": [
         {
         "type" : "virtualbox-ovf",

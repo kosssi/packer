@@ -14,6 +14,23 @@
   },
 
   "builders": [
+      {
+        "type" : "virtualbox-ovf",
+        "source_path": "/srv/nfs1/vagrant.klas.or.id/ova/virtualbox-ova-{{ user `vmname`}}.ova",
+        "headless": "{{user `headless`}}",
+        "ssh_password": "{{ user `ssh_password`}}",
+        "ssh_username": "{{ user `ssh_username`}}",
+        "shutdown_command": "{{user `shutdown_command`}}",
+        "ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
+        "shutdown_command": "{{user `shutdown_command`}}",
+        "virtualbox_version_file": ".vbox_version",
+        "guest_additions_mode": "disable",
+        "vboxmanage": [
+        [ "modifyvm", "{{.Name}}", "--memory", "1024" ],
+        [ "modifyvm", "{{.Name}}", "--cpus",   "2"    ]
+        ],
+        "guest_additions_path": "/srv/nfs1/vagrant.klas.or.id/iso/VBoxGuestAdditions_4.3.20.iso"
+    },
     {
       "type": "virtualbox-iso",
       "boot_command": [

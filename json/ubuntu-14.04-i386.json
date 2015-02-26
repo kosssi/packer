@@ -9,6 +9,7 @@
     "ssh_password": "vagrant",
     "ssh_wait_timeout": "1h",
     "disk_size": "40960",
+    "distro" : "ubuntu",
     "shutdown_command": "echo 'shutdown -P -h now' > shutdown.sh; echo 'vagrant'|sudo -S sh 'shutdown.sh'"
   },
   "builders": [
@@ -143,7 +144,8 @@
         "scripts/ubuntu/initial.sh",
         "scripts/ubuntu/vagrant.sh",
         "scripts/ubuntu/sudoers.sh",
-		"scripts/ubuntu/cleanup.sh"
+		"scripts/ubuntu/cleanup.sh",
+		"scripts/common/minimize.sh"
       ],
       "type": "shell",
       "except": ["virtualbox-ovf"]
@@ -151,7 +153,8 @@
     {
       "scripts": [
         "scripts/ubuntu/upgrade.sh",
-		"scripts/ubuntu/cleanup.sh"
+		"scripts/ubuntu/cleanup.sh",
+		"scripts/common/minimize.sh"
       ],
       "type": "shell",
       "only": [ "virtualbox-ovf"]

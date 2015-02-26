@@ -17,9 +17,9 @@ case "$release" in
 esac
 # Updating and Upgrading dependencies
 sudo apt-get install aptitude -y
-sudo apt-get update -y -qq > /dev/null
-sudo apt-get upgrade -y -qq > /dev/null
-sudo apt-get dist-upgrade -y -qq > /dev/null
+sudo apt-get update -y > /dev/null
+sudo apt-get upgrade -y > /dev/null
+sudo apt-get dist-upgrade -y > /dev/null
 # Install necessary libraries for guest additions and Vagrant NFS Share
 
 case "$release" in
