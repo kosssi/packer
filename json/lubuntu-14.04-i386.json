@@ -10,7 +10,7 @@
     "ssh_password": "vagrant",
     "ssh_username": "vagrant",
     "ssh_wait_timeout": "1h",
-    "vmname": "lubuntu-15.04-i386"
+    "vmname": "lubuntu-14.04-i386"
   },
   "builders": [
     {

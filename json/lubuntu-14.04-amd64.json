@@ -2,7 +2,7 @@
   "variables": {
     "disk_size": "40960",
     "distro" : "lubuntu",
-    "headless": "false",
+    "headless": "true",
     "iso_checksum": "a5f97cd6a9f171c70cf816de8728f13b",
     "iso_checksum_type": "md5",
     "iso_url": "http://buaya.klas.or.id/iso/ubuntu/cdimage/lubuntu/14.04/release/lubuntu-14.04.1-alternate-amd64.iso",
