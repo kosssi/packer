@@ -14,14 +14,14 @@ What Difference between other?
 
  - Generated daily
  - Use 40GB harddisk
- - mirror location in indonesia.
+ - Mirror location in indonesia.
 
 ## Download
 
 ### Mirror
 
- - [buaya](http://buaya.klas.or.id/etc/vagrant)
+ - [buaya](http://vagrant.klas.or.id)
 
 ### Atlas
- TBA
+ - [atlas](https://atlas.hashicorp.com/boxes/search?provider=virtualbox&q=buaya)
 
