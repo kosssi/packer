@@ -2,7 +2,7 @@
   "variables": {
     "alias": "precise",
     "disk_size": "40960",
-    "distro" : "ubuntu",
+    "distro" : "lubuntu",
     "headless": "true",
     "iso_checksum": "e4d16caf537be112f3dc9ba94e158cf7",
     "iso_checksum_type": "md5",
@@ -12,7 +12,7 @@
     "ssh_password": "vagrant",
     "ssh_username": "vagrant",
     "ssh_wait_timeout": "1h",
-    "vmname": "ubuntu-12.04-i386"
+    "vmname": "lubuntu-12.04-i386"
   },
   "builders": [
      {

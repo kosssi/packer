@@ -24,7 +24,7 @@ dpkg --list | awk '{ print $2 }' | grep linux-source | xargs sudo apt-get -y pur
 #apt-get -y purge libx11-data xauth libxmuu1 libxcb1 libx11-6 libxext6
 
 # delete obsolete networking
-sudo apt-get -y purge ppp pppconfig pppoeconf
+#sudo apt-get -y purge ppp pppconfig pppoeconf
 
 # delete oddities
 sudo apt-get -y purge popularity-contest

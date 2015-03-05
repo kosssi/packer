@@ -1,96 +1,80 @@
 {
   "variables": {
-    "vmname": "ubuntu-15.04-amd64",
-    "headless": "true",
-    "iso_url": "http://buaya.klas.or.id/ubuntu/dists/vivid/main/installer-amd64/current/images/netboot/mini.iso",
-    "iso_checksum": "1499210055363c232a7b739387e436f7",
-    "ssh_username": "vagrant",
-    "iso_checksum_type": "md5",
-    "ssh_password": "vagrant",
-    "ssh_wait_timeout": "1h",
+    "alias": "vivid",
     "disk_size": "40960",
-    "shutdown_command": "echo 'shutdown -P -h now' > shutdown.sh; echo 'vagrant'|sudo -S sh 'shutdown.sh'"
+    "distro" : "ubuntu",
+    "headless": "true",
+    "iso_checksum": "7ace5fc32b167d2e94e15086a501aa79",
+    "iso_checksum_type": "md5",
+    "iso_url": "http://buaya.klas.or.id/ubuntu/dists/vivid/main/installer-amd64/20101020ubuntu367/images/netboot/mini.iso",
+    "out_dir": "/srv/nfs1/vagrant.klas.or.id/box/{{isotime \"2006-01-02\"}}", 
+    "shutdown_command": "echo 'shutdown -P -h now' > shutdown.sh; echo 'vagrant'|sudo -S sh 'shutdown.sh'",
+    "ssh_password": "vagrant",
+    "ssh_username": "vagrant",
+    "ssh_wait_timeout": "1h",
+    "vmname": "ubuntu-15.04-amd64"
   },
   "builders": [
-        {
-        "type" : "virtualbox-ovf",
-        "source_path": "/srv/nfs1/vagrant.klas.or.id/ova/virtualbox-ova-{{ user `vmname`}}.ova",
-        "headless": "{{user `headless`}}",
-        "ssh_password": "{{ user `ssh_password`}}",
-        "ssh_username": "{{ user `ssh_username`}}",
-        "shutdown_command": "{{user `shutdown_command`}}",
-        "ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
-        "shutdown_command": "{{user `shutdown_command`}}",
-        "guest_additions_mode": "disable",
-        "virtualbox_version_file": ".vbox_version",
-        "vboxmanage": [
+     {
+    "type": "docker",
+    "image": "ubuntu:{{ user `alias`}}",
+    "export_path": "{{ user `out_dir`}}/docker-{{ user `vmname`}}.tar"     
+     },
+     {
+  	"type" : "virtualbox-ovf",
+  	"guest_additions_mode": "disable",
+  	"guest_additions_path": "/srv/nfs1/vagrant.klas.or.id/iso/VBoxGuestAdditions_4.3.20.iso",
+  	"headless": "{{user `headless`}}",
+  	"shutdown_command": "{{user `shutdown_command`}}",
+  	"shutdown_command": "{{user `shutdown_command`}}",
+  	"source_path": "/srv/nfs1/vagrant.klas.or.id/ova/virtualbox-ova-{{ user `vmname`}}.ova",
+  	"ssh_password": "{{ user `ssh_password`}}",
+  	"ssh_username": "{{ user `ssh_username`}}",
+  	"ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
+  	"virtualbox_version_file": ".vbox_version",
+  	"vboxmanage": [
         [ "modifyvm", "{{.Name}}", "--memory", "1024" ],
         [ "modifyvm", "{{.Name}}", "--cpus",   "2"    ]
-        ],
-        "guest_additions_path": "/srv/nfs1/vagrant.klas.or.id/iso/VBoxGuestAdditions_4.3.20.iso"
-    },
-      {
-        "type": "qemu",
-	"format": "qcow2",
-        "accelerator": "kvm",
-	"http_directory": ".",
-        "disk_size": "{{ user `disk_size`}}",
-        "headless": "{{ user `headless`}}",
-        "iso_checksum_type": "{{ user `iso_checksum_type` }}",
-        "iso_checksum": "{{ user `iso_checksum` }}",
-        "iso_url": "{{ user `iso_url` }}",
-        "shutdown_command": "{{user `shutdown_command`}}",
-        "ssh_password": "{{ user `ssh_password`}}",
-        "ssh_username": "{{ user `ssh_username`}}",
-        "ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
-        "vm_name": "{{ user `vmname`}}",
-      	"boot_command": [
-		"<esc><wait>",
-		"/install/vmlinuz noapic preseed/url=http://vagrant.klas.or.id/preseed/ubuntu.cfg <wait>",
-		"debian-installer=en_US auto locale=en_US kbd-chooser/method=us <wait>",
-		"hostname={{ .Name }} <wait>",
-		"fb=false debconf/frontend=noninteractive <wait>",
-		"keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA keyboard-configuration/variant=USA console-setup/ask_detect=false <wait>",
-		"initrd=/install/initrd.gz -- <enter><wait>"
-      ]
+        ]
     },
     {
-      "type": "virtualbox-iso",
-      "guest_os_type": "Ubuntu_64",
-      "boot_wait": "10s",
-      "virtualbox_version_file": ".vbox_version",
-      "vboxmanage": [
-          [
-          "modifyvm",
-          "{{.Name}}",
-          "--memory",
-          "2048"
-        ],
-        [
-          "modifyvm",
-          "{{.Name}}",
-          "--cpus",
-          "4"
-        ]
+	"type": "virtualbox-iso",
+	"boot_wait": "4s",
+	"disk_size": "{{ user `disk_size`}}",
+	"guest_os_type": "Ubuntu_64",
+	"headless": "{{ user `headless`}}",
+	"http_directory": ".",
+	"iso_checksum_type": "{{ user `iso_checksum_type` }}",
+	"iso_checksum": "{{ user `iso_checksum` }}",
+	"iso_url": "{{ user `iso_url` }}",
+	"shutdown_command": "{{user `shutdown_command`}}",
+	"ssh_password": "{{ user `ssh_password`}}",
+	"ssh_username": "{{ user `ssh_username`}}",
+	"ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
+	"virtualbox_version_file": ".vbox_version",
+	"vm_name": "{{ user `vmname`}}",
+  	"vboxmanage": [
+        [ "modifyvm", "{{.Name}}", "--memory", "1024" ],
+        [ "modifyvm", "{{.Name}}", "--cpus",   "2"    ]
       ],
-      "disk_size": "{{ user `disk_size`}}",
-      "headless": "{{ user `headless`}}",
-      "http_directory": ".",
-      "iso_checksum_type": "{{ user `iso_checksum_type` }}",
-      "iso_checksum": "{{ user `iso_checksum` }}",
-      "iso_url": "{{ user `iso_url` }}",
-      "shutdown_command": "{{user `shutdown_command`}}",
-      "ssh_password": "{{ user `ssh_password`}}",
-      "ssh_username": "{{ user `ssh_username`}}",
-      "ssh_wait_timeout": "{{ user `ssh_wait_timeout`}}",
-      "vm_name": "{{ user `vmname`}}",
-      "boot_command": [
+	"boot_command": [
         "<esc><wait><wait>",
-        "/linux noapic preseed/url=http://vagrant.klas.or.id/preseed/ubuntu.cfg <wait>",
-        "debian-installer=en_US auto locale=en_US kbd-chooser/method=us <wait>",
+        "/linux noapic <wait>",
+        "auto locale=en_US <wait>",
+        "console-setup/ask_detect=false <wait>",
+        "console-setup/layoutcode=us<wait> ",
+        "console-setup/modelcode=pc105<wait> ",
+        "debian-installer=en_US <wait>",
+        "debconf/frontend=noninteractive <wait>",
+        "fb=false",
         "hostname={{ .Name }} <wait>",
-        "fb=false debconf/frontend=noninteractive <wait>",
-        "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA keyboard-configuration/variant=USA console-setup/ask_detect=false <wait>",
+        "kbd-chooser/method=us <wait>",
+        "keyboard-configuration/layout=USA <wait>",
+        "keyboard-configuration/modelcode=SKIP <wait>",
+        "keyboard-configuration/variant=USA <wait>",
+        "netcfg/get_domain={{ .Name }} <wait>",
+        "netcfg/get_hostname={{ .Name }} <wait>",
+        "preseed/url=http://vagrant.klas.or.id/preseed/{{ user `distro`}}.cfg <wait>",
         "initrd=/initrd.gz -- <enter><wait>"
       ]
     }
@@ -99,7 +83,16 @@
    {
       "type": "vagrant",
       "compression_level": 9,
-      "output" : "/srv/nfs1/vagrant.klas.or.id/box/{{isotime \"2006-01-02\"}}/{{.Provider}}-{{ user `vmname`}}.box"
+      "only": ["virtualbox-ovf", "virtualbox-iso"],
+      "override": {
+          "virtualbox-iso": {
+              "vagrantfile_template": "http/Vagrantfile.tmpl"
+          },
+          "virtualbox-ovf": {
+              "vagrantfile_template": "http/Vagrantfile.tmpl"
+          }
+      },
+      "output" : "{{ user `out_dir`}}/{{.Provider}}-{{ user `vmname`}}.box"
    }
   ],
   "provisioners": [
@@ -110,12 +103,28 @@
         }
       },
       "scripts": [
-        "scripts/debian/initial.sh",
-        "scripts/common/vagrant.sh",
-	"scripts/debian/cleanup.sh"
+        "scripts/ubuntu/initial.sh",
+        "scripts/ubuntu/vagrant.sh",
+        "scripts/ubuntu/sudoers.sh",
+		"scripts/ubuntu/cleanup.sh",
+		"scripts/common/minimize.sh"
       ],
-      "type": "shell"
+      "type": "shell",
+      "except": ["virtualbox-ovf", "docker"]
+    },
+    {
+     "type": "shell",
+     "scripts": [ "scripts/ubuntu/docker-upgrade.sh" ],
+     "only": [ "docker" ]
+    },
+    {
+      "scripts": [
+        "scripts/ubuntu/upgrade.sh",
+		"scripts/ubuntu/cleanup.sh",
+		"scripts/common/minimize.sh"
+      ],
+      "type": "shell",
+      "only": [ "virtualbox-ovf"]
     }
   ]
 }
-

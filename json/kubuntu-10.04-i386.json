@@ -1,18 +1,18 @@
 {
   "variables": {
-    "alias": "precise",
+    "alias": "lucid",
     "disk_size": "40960",
-    "distro" : "ubuntu",
+    "distro" : "kubuntu",
     "headless": "true",
-    "iso_checksum": "e4d16caf537be112f3dc9ba94e158cf7",
+    "iso_checksum": "7b383bcf55f09b1bb7e6614ed6e67a0e",
     "iso_checksum_type": "md5",
-    "iso_url": "http://buaya.klas.or.id/ubuntu/dists/precise/main/installer-i386/20101020ubuntu136/images/netboot/mini.iso",
+    "iso_url": "http://buaya.klas.or.id/ubuntu/dists/lucid/main/installer-i386/20081029ubuntu102/images/netboot/mini.iso",
     "out_dir": "/srv/nfs1/vagrant.klas.or.id/box/{{isotime \"2006-01-02\"}}", 
     "shutdown_command": "echo 'shutdown -P -h now' > shutdown.sh; echo 'vagrant'|sudo -S sh 'shutdown.sh'",
     "ssh_password": "vagrant",
     "ssh_username": "vagrant",
     "ssh_wait_timeout": "1h",
-    "vmname": "ubuntu-12.04-i386"
+    "vmname": "kubuntu-10.04-i386"
   },
   "builders": [
      {

@@ -5,19 +5,21 @@ set -x
 
 release=$(lsb_release -cs)
 DEBIAN_FRONTEND=noninteractive
+sudo su -c 'echo libc6:amd64 libraries/restart-without-asking boolean true| debconf-set-selections'
+sudo su -c 'echo libc6 libraries/restart-without-asking boolean true| debconf-set-selections'
 
 case "$release" in
 	precise)
-	sudo mv /etc/apt/sources.list /etc/apt/sources.list.orig
-	sudo wget -O /etc/apt/sources.list http://buaya.klas.or.id/etc/src-list-precise-canonical.txt
+	#sudo mv /etc/apt/sources.list /etc/apt/sources.list.orig
+	#sudo wget -O /etc/apt/sources.list http://buaya.klas.or.id/etc/src-list-precise-canonical.txt
 	;;
 	*)
 	echo "doing nothing"
 	;;
 esac
 # Updating and Upgrading dependencies
+sudo apt-get update 
 sudo apt-get install aptitude -y
-sudo apt-get update -y > /dev/null
 sudo apt-get upgrade -y > /dev/null
 sudo apt-get dist-upgrade -y > /dev/null
 # Install necessary libraries for guest additions and Vagrant NFS Share
